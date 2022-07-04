@@ -17,16 +17,16 @@ async function mintToken(
   baseVotePower: number
 ) {
 
-  console.log(`Attaching ballot contract interface to address ${tokenAddress}`);
+  console.log(`Attaching token contract interface to address ${tokenAddress}`);
   const tokenContract: MyToken = new Contract(
     tokenAddress,
     tokenJson.abi,
     signer
   ) as MyToken;
 
-  const mintTx = await tokenContract.mint(tokenAddress, baseVotePower);
+  const mintTx = await tokenContract.mint(signer.address, ethers.utils.parseEther(baseVotePower.toFixed(18)));
   await mintTx.wait(1);
-  console.log(`Mint completed for address ${tokenAddress}`);
+  console.log(`Mint completed for address ${signer.address}`);
 }
 async function main() {
     if (process.argv.length < 3) throw new Error("token address missing");
