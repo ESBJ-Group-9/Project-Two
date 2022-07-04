@@ -1,8 +1,8 @@
 import { Contract, ethers } from "ethers";
 import "dotenv/config";
-import * as tokenJson from "../artifacts/contracts/Token.sol/MyToken.json";
-import { setupProvider, wallet } from "../utils/setup-provider";
-import { MyToken } from "../typechain";
+import * as tokenJson from "../../artifacts/contracts/Token.sol/MyToken.json";
+import { setupProvider, wallet } from "../../utils/setup-provider";
+import { MyToken } from "../../typechain";
 
 // This key is already public on Herong's Tutorial Examples - v1.03, by Dr. Herong Yang
 // Do never expose your keys like this

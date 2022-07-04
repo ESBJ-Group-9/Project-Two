@@ -60,3 +60,5 @@ contract CustomBallot {
             spentVotePower[msg.sender];
     }
 }
+
+// contract address 0xee120d35ab1912eae46568c19B6B4B1469abcF17

@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
 import "dotenv/config";
-import * as ballotJson from "../artifacts/contracts/CustomBallot.sol/CustomBallot.json";
-import * as tokenJson from "../artifacts/contracts/Token.sol/MyToken.json";
-import {setupProvider, wallet} from "../utils/setup-provider";
+import * as ballotJson from "../../artifacts/contracts/CustomBallot.sol/CustomBallot.json";
+import tokenContract from "../token/deploy";
+import { setupProvider, wallet } from "../../utils/setup-provider";
 
 // This key is already public on Herong's Tutorial Examples - v1.03, by Dr. Herong Yang
 // Do never expose your keys like this
@@ -15,25 +15,13 @@ function convertStringArrayToBytes32(array: string[]) {
   return bytes32Array;
 }
 
-setupProvider()
+setupProvider();
 
-
-async function tokenDeploy(signer:ethers.Wallet) : Promise<string> {
-  const tokenFactory = new ethers.ContractFactory(
-    tokenJson.abi,
-    tokenJson.bytecode,
-    signer
-  );
-  const tokenContract = await tokenFactory.deploy();
-  console.log("Awaiting confirmations");
-  await tokenContract.deployed();
-  console.log("Completed");
-  console.log(`Token Contract deployed at ${tokenContract.address}`);
-  return tokenContract.address
-}
-
-async function ballotDeploy(signer: ethers.Wallet, proposals:string[], tokenAdress: string) {
-  
+async function ballotDeploy(
+  signer: ethers.Wallet,
+  proposals: string[],
+  tokenAdress: string
+) {
   const ballotFactory = new ethers.ContractFactory(
     ballotJson.abi,
     ballotJson.bytecode,
@@ -47,7 +35,6 @@ async function ballotDeploy(signer: ethers.Wallet, proposals:string[], tokenAdre
   await ballotContract.deployed();
   console.log("Completed");
   console.log(`Ballot Contract deployed at ${ballotContract.address}`);
-  
 }
 async function main() {
   console.log("Proposals: ");
@@ -56,9 +43,9 @@ async function main() {
   proposals.forEach((element, index) => {
     console.log(`Proposal N. ${index + 1}: ${element}`);
   });
-const signer =  await wallet();
-const tokenAdress = await tokenDeploy(signer)
-await ballotDeploy(signer, proposals, tokenAdress)
+  const signer = await wallet();
+  const tokenAdress = "0x97E7332b33404Ef8F5dA1A6DbBC35E5864062f89";
+  await ballotDeploy(signer, proposals, tokenAdress);
 }
 main().catch((error) => {
   console.error(error);

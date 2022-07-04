@@ -1,8 +1,8 @@
 import { Contract, ethers } from "ethers";
 import "dotenv/config";
-import * as tokenJson from "../artifacts/contracts/Token.sol/MyToken.json";
-import { setupProvider, wallet } from "../utils/setup-provider";
-import { MyToken } from "../typechain";
+import * as tokenJson from "../../artifacts/contracts/Token.sol/MyToken.json";
+import { setupProvider, wallet } from "../../utils/setup-provider";
+import { MyToken } from "../../typechain";
 
 // This key is already public on Herong's Tutorial Examples - v1.03, by Dr. Herong Yang
 // Do never expose your keys like this
@@ -23,7 +23,7 @@ async function mintToken(
     tokenJson.abi,
     signer
   ) as MyToken;
-
+  
   const mintTx = await tokenContract.mint(signer.address, ethers.utils.parseEther(baseVotePower.toFixed(18)));
   await mintTx.wait(1);
   console.log(`Mint completed for address ${signer.address}`);
