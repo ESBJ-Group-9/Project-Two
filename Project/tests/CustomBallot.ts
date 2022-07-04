@@ -78,7 +78,7 @@ describe("Ballot", function () {
       await ballotContract.deployed();
     });
 
-    it("has the provided proposals", async () => {
+    it.only("has the provided proposals", async () => {
       for (let index = 0; index < PROPOSALS.length; index++) {
         const proposal = await ballotContract.proposals(index);
         expect(ethers.utils.parseBytes32String(proposal.name)).to.eq(

@@ -11,6 +11,6 @@
   "ts-node": {
     "esm": true
   },
-  "include": ["./scripts", "./tests", "./typechain"],
+  "include": ["./scripts", "./tests", "./typechain", "utils"],
   "files": ["./hardhat.config.ts"]
 }
