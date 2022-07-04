@@ -32,7 +32,8 @@ async function vote(
   const voteTx = await ballotContract.vote(indexToVote, votingAmount);
   await voteTx.wait();
   const proposalVote = await ballotContract.proposals(indexToVote);
-  
+  console.log(`Transaction completed. Hash: ${voteTx.hash}`);
+
   console.log(`vote completed for propsosal ${proposalVote}`);
 }
 async function main() {

@@ -28,6 +28,7 @@ async function delegateVote(
     : await tokenContract.delegate(signer.address);
   await delegateTx.wait(1);
   console.log(`delegate completed!`);
+  console.log(`Transaction completed. Hash: ${delegateTx.hash}`);
 }
 async function main() {
   if (process.argv.length < 3) throw new Error("token address missing");

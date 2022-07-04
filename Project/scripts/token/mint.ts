@@ -27,6 +27,7 @@ async function mintToken(
   const mintTx = await tokenContract.mint(signer.address, ethers.utils.parseEther(baseVotePower.toFixed(18)));
   await mintTx.wait(1);
   console.log(`Mint completed for address ${signer.address}`);
+  console.log(`Transaction completed. Hash: ${mintTx.hash}`);
 }
 async function main() {
     if (process.argv.length < 3) throw new Error("token address missing");
