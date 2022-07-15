@@ -1,15 +1,22 @@
-// eslint-disable-next-line no-unused-vars
-import { Contract, BigNumber, ethers } from "ethers";
+import { ethers } from "ethers";
 import "dotenv/config";
-import * as tokenJson from "../../artifacts/contracts/Token.sol/MyToken.json";
+import * as customBallotJson from "../../artifacts/contracts/CustomBallot.sol/CustomBallot.json";
 
-// eslint-disable-next-line node/no-missing-import
-import { MyToken } from "../../typechain";
+// Contract deployed at 0xb12352DA2BF4697e7b0A2D0A0256b11E2FcE6609
+// Using address 0x63FaC9201494f0bd17B9892B9fae4d52fe3BD377
 
 // This key is already public on Herong's Tutorial Examples - v1.03, by Dr. Herong Yang
 // Do never expose your keys like this
 const EXPOSED_KEY =
   "8da4ef21b864d2cc526dbdb2a120bd2874c36c9d0a1fb7f8c63d7f7a8b41de8f";
+
+function convertStringArrayToBytes32(array: string[]) {
+  const bytes32Array = [];
+  for (let index = 0; index < array.length; index++) {
+    bytes32Array.push(ethers.utils.formatBytes32String(array[index]));
+  }
+  return bytes32Array;
+}
 
 function setupProvider() {
   const infuraOptions = process.env.INFURA_API_KEY
@@ -43,23 +50,30 @@ async function main() {
     throw new Error("Not enough ether");
   }
 
-  const tokenAddress = "0x85a91dAa10c77Db96DF56De36276aDF2E1CEBbF5";
-  console.log(`Attaching ballot contract interface to address ${tokenAddress}`);
-
-  const tokenContract: MyToken = new Contract(
-    tokenAddress,
-    tokenJson.abi,
+  const wallet1 = ethers.Wallet.createRandom().connect(provider);
+  console.log(`wallet!add::: ${wallet1}`);
+  console.log("Deploying Ballot contract");
+  console.log("Proposals: ");
+  // const proposals = process.argv.slice(2);
+  const proposals = ["Cake", "Cookies", "Yoghurt"];
+  if (proposals.length < 2) throw new Error("Not enough proposals provided");
+  proposals.forEach((element, index) => {
+    console.log(`Proposal N. ${index + 1}: ${element}`);
+  });
+  const ballotFactory = new ethers.ContractFactory(
+    customBallotJson.abi,
+    customBallotJson.bytecode,
     signer
-  ) as MyToken;
-
-  const mintTx = await tokenContract.mint(
-    signer.address,
-    ethers.utils.parseEther("100")
+  );
+  const tokenAddress = "0x85a91dAa10c77Db96DF56De36276aDF2E1CEBbF5";
+  const ballotContract = await ballotFactory.deploy(
+    convertStringArrayToBytes32(proposals),
+    tokenAddress
   );
   console.log("Awaiting confirmations");
-  await mintTx.wait();
-  console.log(`Mint completed for address ${signer.address}`);
-  console.log(`Transaction completed. Hash: ${mintTx.hash}`);
+  await ballotContract.deployed();
+  console.log("Completed");
+  console.log(`Contract deployed at ${ballotContract.address}`);
 }
 
 main().catch((error) => {
